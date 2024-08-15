@@ -34,17 +34,20 @@ def save_movies(data, file_path):
 # MAKE JSON
 def mkjson(pg = 1, dt = 2015, sleep_time = 1):
     file_path = f'/home/kimpass189/data/movies/year={dt}/data.json'
-    dic = req(pg, dt) # 첫번째 10개 데이터 저장
-    mvli = dic['movieListResult']['movieList']
-    result = [] # 결과 저장될 곳
-    # 첫페이지 저장
-    result.extend(mvli)
-    cnt = math.ceil(dic['movieListResult']['totCnt'] / 10) # 몇번 돌아야 하는가
-    # 첫번째는 저장했으니 두번째부터
-    for i in tqdm(range(2,cnt+1)):
-        time.sleep(sleep_time) # 쉬었다가~
-        data = req(i, dt) # 2번째 페이지부터 쭉쭉
-        mvli = data['movieListResult']['movieList'] # 영화 목록
-        result.extend(mvli) # 이미 있던 곳에 extend로 추가
-    save_movies(result, file_path)
+    if os.path.isfile(file_path):
+        print(f"!!!데이터가 이미 존재합니다!!! : {file_path}")
+    else:
+        dic = req(pg, dt) # 첫번째 10개 데이터 저장
+        mvli = dic['movieListResult']['movieList']
+        result = [] # 결과 저장될 곳
+        # 첫페이지 저장
+        result.extend(mvli)
+        cnt = math.ceil(dic['movieListResult']['totCnt'] / 10) # 몇번 돌아야 하는가
+        # 첫번째는 저장했으니 두번째부터
+        for i in tqdm(range(2,cnt+1)):
+            time.sleep(sleep_time) # 쉬었다가~
+            data = req(i, dt) # 2번째 페이지부터 쭉쭉
+            mvli = data['movieListResult']['movieList'] # 영화 목록
+            result.extend(mvli) # 이미 있던 곳에 extend로 추가
+        save_movies(result, file_path)
     return True
