@@ -1,6 +1,7 @@
 from mvstar.app import mkjson
 from mvstar.mvinfo import read_data
 from mvstar.cplist import cpjson
+from mvstar.dynamic import mkdynamic
 import requests
 import json
 
@@ -32,4 +33,6 @@ def test_cplist():
     except KeyError:
         print("이상한 key error")
     print("================================")
-
+def test_dy():
+    r = mkdynamic(sleep_time = 0.1)
+    assert r
