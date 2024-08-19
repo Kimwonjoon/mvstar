@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import requests
-import math
+import json
 import time
 from tqdm import tqdm
 # API_KEY
@@ -19,7 +19,8 @@ def gen_url(pg = 1):
 def req(pg = 1):
     url = gen_url(pg)
     res = requests.get(url)
-    data = res.json()
+#    data = res.json()
+    data = json.loads(res.text)
     return data
 
 # SAVE_JSON
@@ -40,12 +41,12 @@ def cpjson(pg = 1, sleep_time = 1):
     result = [] # 결과 저장될 곳
     # 첫페이지 저장
     result.extend(cpli)
-    cnt = math.ceil(dic['companyListResult']['totCnt'] / 10) # 몇번 돌아야 하는가
+    cnt = (dic['companyListResult']['totCnt'] // 10) + 1 # 몇번 돌아야 하는가
     # 첫번째는 저장했으니 두번째부터
     for i in tqdm(range(2,cnt+1)):
         time.sleep(sleep_time) # 쉬었다가~
         data = req(pg=i) # 2번째 페이지부터 쭉쭉
-        cpli = data['companyListResult']['companyList'] # 영화 목록
-        result.extend(cpli) # 이미 있던 곳에 extend로 추가
+        cplist = data['companyListResult']['companyList'] # 영화 목록
+        result.extend(cplist) # 이미 있던 곳에 extend로 추가
     save_movies(result, file_path)
     return True

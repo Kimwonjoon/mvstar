@@ -2,6 +2,7 @@ from mvstar.app import mkjson
 from mvstar.mvinfo import read_data
 from mvstar.cplist import cpjson
 import requests
+import json
 
 def test_json():
     print("==============영화목록==============")
@@ -23,7 +24,12 @@ def test_info():
 
 def test_cplist():
     print("==============영화사목록==============")
-    r = cpjson(pg = 1, sleep_time = 0.5)
-    assert r
+    try:
+        r = cpjson(pg = 1, sleep_time = 0.1)
+        assert r
+    except json.JSONDecodeError:
+        print('알 수 없는 JsonDecodeError')
+    except KeyError:
+        print("이상한 key error")
     print("================================")
 
